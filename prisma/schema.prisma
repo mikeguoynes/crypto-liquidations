@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  notes     Note[]
+  password  Password?
+}
+
+model Password {
+  hash   String
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model accounts {
+  id           Int                  @id @default(autoincrement())
+  index        Unsupported("uuid")?
+  address      String?
+  ALGO_net     Float?
+  goBTC_net    Float?
+  goETH_net    Float?
+  STBL_net     Float?
+  USDC_net     Float?
+  total_borrow Float?
+  max_borrow   Float?
+  util_perc    Float?
+  ALGO_borrow  Float?
+  ALGO_supply  Float?
+  goBTC_borrow Float?
+  goBTC_supply Float?
+  goETH_borrow Float?
+  goETH_supply Float?
+  USDC_borrow  Float?
+  USDC_supply  Float?
+  STBL_supply  Float?
+  STBL_borrow  Float?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model high_level {
+  index        BigInt?
+  address      String?
+  ALGO_net     Float?
+  goBTC_net    Float?
+  goETH_net    Float?
+  STBL_net     Float?
+  USDC_net     Float?
+  total_borrow Float?
+  max_borrow   Float?
+  util_perc    Float?
+  ALGO_borrow  Float?
+  ALGO_supply  Float?
+  goBTC_borrow Float?
+  goBTC_supply Float?
+  goETH_borrow Float?
+  goETH_supply Float?
+  USDC_borrow  Float?
+  USDC_supply  Float?
+  STBL_supply  Float?
+  STBL_borrow  Float?
+
+  @@index([index], map: "ix_high_level_index")
+  @@ignore
+}
