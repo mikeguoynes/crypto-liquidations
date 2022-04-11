@@ -11,8 +11,8 @@ type LoaderData = {
   accountsListItems: Awaited<ReturnType<typeof getAccounts>>;
 };
 export const links: LinksFunction = () => {
-    return [{ rel: "stylesheet", href: tables }];
-  };
+  return [{ rel: "stylesheet", href: tables }];
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const accountsListItems = await getAccounts();
@@ -25,7 +25,7 @@ export default function AccountsPage() {
 
   const handleSort = () => {
     console.log("sort");
-  }
+  };
 
   return (
     <div className="flex h-full min-h-screen flex-col">
@@ -64,21 +64,23 @@ export default function AccountsPage() {
                 <th onClick={handleSort}>usdc</th>
                 <th onClick={handleSort}>Stbl</th>
                 <th onClick={handleSort}>max borrow</th>
+                <th onClick={handleSort}>total borrow</th>
+
               </tr>
             </thead>
             <tbody>
               {data.accountsListItems.map((account) => (
-                <tr key="account.id">
-                    <td>{account.id}</td>
-                    <td>{account.ALGO_net}</td>
-                    <td>{account.goBTC_net}</td>
-                    <td>{account.goETH_net}</td>
-                    <td>{account.USDC_net}</td>
-                    <td>{account.STBL_net}</td>
-                    <td>{account.max_borrow}</td>
-              </tr>
+                <tr key={account.id}>
+                  <td><Link to={`/accounts/${account.id}`}>{account.id}</Link></td>
+                  <td>{account.ALGO_net}</td>
+                  <td>{account.goBTC_net}</td>
+                  <td>{account.goETH_net}</td>
+                  <td>{account.USDC_net}</td>
+                  <td>{account.STBL_net}</td>
+                  <td>{account.max_borrow}</td>
+                  <td>{account.total_borrow}</td>
+                </tr>
               ))}
-              
             </tbody>
           </table>
 
