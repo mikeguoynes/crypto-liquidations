@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import { Form, Link, Outlet, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { accounts, getAccountByID } from "~/models/liquidations.server";
 
@@ -16,11 +16,11 @@ export const links: LinksFunction = () => {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   return {
-    ...await getPriceAPI('bitcoin'),
-    ...await getPriceAPI('ethereum'),
-    ...await getPriceAPI('algorand'),
-    account: await getAccountByID(params.accountId)
-  }
+    ...(await getPriceAPI("bitcoin")),
+    ...(await getPriceAPI("ethereum")),
+    ...(await getPriceAPI("algorand")),
+    account: await getAccountByID(params.accountId),
+  };
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -33,67 +33,94 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function AccountDetailsPage() {
-  const {account, algorand, bitcoin, ethereum } = useLoaderData();
+  const { account, algorand, bitcoin, ethereum } = useLoaderData();
+  const tableView = () => ( <table className="table-auto">
+  <thead>
+    <tr>
+      <th></th>
+      <th>ALGO</th>
+      <th>goBTC</th>
+      <th>goETH</th>
+      <th>USDC</th>
+      <th>STBL</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Supplied </td>
+      <td>{account?.ALGO_supply || "-"}</td>
+      <td>{account?.goBTC_supply || "-"}</td>
+      <td>{account?.goETH_supply || "-"}</td>
+      <td>{account?.USDC_supply || "-"}</td>
+      <td>{account?.STBL_supply || "-"}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Price</td>
+      <td>${algorand.usd}</td>
+      <td>${bitcoin.usd}</td>
+      <td>${ethereum.usd}</td>
+      <td></td>
+      <td>STBL supply</td>
+    </tr>
+    <tr>
+      <td>Value ($)</td>
+    </tr>
+    <tr>
+      <td>Collateral Factor</td>
+    </tr>
+    <tr>
+      <td>Max Borrow</td>
+    </tr>
+    <tr>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Borrowed</td>
+    </tr>
+    <tr>
+      <td>Price</td>
+    </tr>
+    <tr>
+      <td>$ Value</td>
+    </tr>
+  </tbody>
+</table>)
+
 
   return (
-  <div className="flex h-full min-h-screen flex-col">
+    <div className="flex h-full min-h-screen flex-col">
+    <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
+      <h1 className="text-3xl font-bold">
+        <Link to="/">Home</Link>
+      </h1>
+      <Form action="/logout" method="post">
+        <button
+          type="submit"
+          className="rounded bg-slate-600 py-2 px-4 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
+        >
+          Logout
+        </button>
+      </Form>
+    </header>
+
     <main className="flex h-full bg-white">
-      <div className="w-80"></div>
-      <div className="h-full flex-1 p-6">
-      <table className="table-auto">
-            <thead>
-              <tr>
-                <th></th>
-                <th>ALGO</th>
-                <th>goBTC</th>
-                <th>goETH</th>
-                <th>USDC</th>
-                <th>STBL</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-                <tr>
-                  <td>Supplied </td>
-                  <td>{account?.ALGO_supply || '-'}</td>
-                  <td>{account?.goBTC_supply || '-'}</td>
-                  <td>{account?.goETH_supply || '-'}</td>
-                  <td>{account?.USDC_supply || '-'}</td>
-                  <td>{account?.STBL_supply || '-'}</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Price</td>
-                  <td>${algorand.usd}</td>
-                  <td>${bitcoin.usd}</td>
-                  <td>${ethereum.usd}</td>
-                  <td></td>
-                  <td>STBL supply</td>
-                </tr>
-                <tr>
-                  <td>Value ($)</td>
-                  </tr>
-                <tr>
-                  <td>Collateral Factor</td>
-                </tr>
-                <tr>
-                  <td>Max Borrow</td></tr>
-                <tr>
-                  <td></td></tr>
-                <tr>
-                  <td>Borrowed</td></tr>
-                <tr>
-                  <td>Price</td></tr>
-                <tr>
-                  <td>$ Value</td></tr>
-            </tbody>
-          </table>
+      <div className="h-full w-80 border-r bg-gray-50">
+        <Link to="new" className="block p-4 text-xl text-blue-500">
+          + New Alert
+        </Link>
+
+        <hr />
       </div>
-    
+
+      <div className="flex-1 p-6">
+        {tableView()}
+
+        <Outlet />
+      </div>
     </main>
-       
   </div>
-   
   );
 }
 
