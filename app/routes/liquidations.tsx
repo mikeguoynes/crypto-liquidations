@@ -7,6 +7,7 @@ import { getAccounts } from "~/models/liquidations.server";
 
 import tables from "../styles/tables.css";
 import global from "../styles/global.css";
+import { Pagination } from "~/components/pagination";
 
 
 type LoaderData = {
@@ -58,6 +59,8 @@ export default function AccountsPage() {
 
         <div className="flex-1 p-6">
         <h2 className="text-xl text-blue-600 my-4 ml-4">Liquidations </h2>
+          {/* TODO: Props offset={pagination?.offset} totalCount={999} */}
+          <Pagination />
           <table className="table-auto">
             <thead>
               <tr>
