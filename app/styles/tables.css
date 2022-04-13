@@ -1,3 +1,16 @@
+table#table-account-view tr td:first-child {
+  background-color: lightblue;
+}
+
+table#table-account-view tr td {
+  font-size: 0.9rem;
+}
+
+table th {
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: sans-serif;
+}
 
 h1{
     font-size: 30px;

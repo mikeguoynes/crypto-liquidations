@@ -54,6 +54,7 @@ export default function AccountsPage() {
         </div>
 
         <div className="flex-1 p-6">
+        <h2 className="text-xl text-blue-600 my-4 ml-4">Liquidations </h2>
           <table className="table-auto">
             <thead>
               <tr>
