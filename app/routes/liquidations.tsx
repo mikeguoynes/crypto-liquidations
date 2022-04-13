@@ -6,16 +6,19 @@ import { useUser } from "~/utils";
 import { getAccounts } from "~/models/liquidations.server";
 
 import tables from "../styles/tables.css";
+import global from "../styles/global.css";
+
 
 type LoaderData = {
   accountsListItems: Awaited<ReturnType<typeof getAccounts>>;
 };
+
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tables }];
+  return [{ rel: "stylesheet", href: tables }, { rel: "stylesheet", href: global }];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const accountsListItems = await getAccounts();
+  const accountsListItems = await getAccounts({offset: 25, limit: 25});
   return json<LoaderData>({ accountsListItems: accountsListItems });
 };
 

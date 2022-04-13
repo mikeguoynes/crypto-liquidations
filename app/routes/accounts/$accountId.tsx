@@ -7,6 +7,8 @@ import { accounts, getAccountByID } from "~/models/liquidations.server";
 import { deleteNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
 import tables from "../../styles/tables.css";
+import global from "../../styles/global.css";
+
 import type { LinksFunction } from "remix";
 import { getPrice as getPriceAPI } from "~/models/pricesAPI.server";
 import { useEffect, useState } from "react";
@@ -17,7 +19,7 @@ export const formatPriceAPI = (price: number = 0) => {
   })
 }
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tables }];
+  return [{ rel: "stylesheet", href: tables }, { rel: "stylesheet", href: global }];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
