@@ -19,7 +19,7 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const accountsListItems = await getAccounts({offset: 25, limit: 25});
+  const accountsListItems = await getAccounts({offset: 100, limit: 25});
   return json<LoaderData>({ accountsListItems: accountsListItems });
 };
 
@@ -27,6 +27,11 @@ export default function AccountsPage() {
   const data = useLoaderData() as LoaderData;
   const user = useUser();
 
+  const handlePageChange = (pageChangeDirection: string) => {
+    if (pageChangeDirection === 'next') {
+      
+    }
+  }
   const handleSort = () => {
     console.log("sort");
   };
@@ -54,17 +59,27 @@ export default function AccountsPage() {
             + New Alert
           </Link>
 
+          <div>
+            <div>Min</div>
+            <input type="text"/>
+          </div>
+
+          <div>
+            <div>Max</div>
+            <input type="text"/>
+          </div>
+
           <hr />
         </div>
 
         <div className="flex-1 p-6">
-        <h2 className="text-xl text-blue-600 my-4 ml-4">Liquidations </h2>
+        <h2 className="text-xl text-blue-600 my-4 ml-4">Borrow Accounts </h2>
           {/* TODO: Props offset={pagination?.offset} totalCount={999} */}
-          <Pagination />
+          <Pagination onPageChange={handlePageChange}/>
           <table className="table-auto">
             <thead>
               <tr>
-                <th onClick={handleSort}>Storage Address</th>
+                <th onClick={handleSort}> Address</th>
                 <th onClick={handleSort}>Algo</th>
                 <th onClick={handleSort}>goBTC</th>
                 <th onClick={handleSort}>goEth</th>

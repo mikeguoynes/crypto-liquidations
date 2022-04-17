@@ -1,7 +1,5 @@
 #TODOS
-[] - paginate accounts list 
-[] - @isaac where are we getting prices? I am hitting coingecko's endpoint currently but could use more thought put into it later
-[] - finish UI for individual accounts
+
 
 
 # Remix Indie Stack

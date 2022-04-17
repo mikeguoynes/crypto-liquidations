@@ -91,13 +91,23 @@ export default function AccountDetailsPage() {
       <td></td>
     </tr>
     <tr>
+      {/* TODO: Make this the asset */}
+      <td>Borrowed (usd)</td>
+      <td>{formatPriceAPI(account?.ALGO_borrow) || "-"}</td>
+      <td>{formatPriceAPI(account?.goBTC_borrow) || "-"}</td>
+      <td>{formatPriceAPI(account?.goETH_borrow) || "-"}</td>
+      <td>{formatPriceAPI(account?.USDC_borrow) || "-"}</td>
+      <td>{formatPriceAPI(account?.STBL_borrow) || "-"}</td>
+      <td>{formatPriceAPI(account?.total_borrow)}</td>
+    </tr>
+    <tr>
       <td>Price</td>
       <td>{formatPriceAPI(prices?.algorand?.usd)}</td>
       <td>{formatPriceAPI(prices?.bitcoin?.usd)}</td>
       <td>{formatPriceAPI(prices?.ethereum?.usd)}</td>
       {/* // TODO: Get price for USDC and STBL */}
-      <td>{formatPriceAPI(prices?.usdc?.usd)}</td>
-      <td>{formatPriceAPI(prices?.stbl?.usd)}</td>
+      <td>{formatPriceAPI(1)}</td>
+      <td>{formatPriceAPI(1)}</td>
       <td></td>
     </tr>
     <tr>
@@ -130,19 +140,11 @@ export default function AccountDetailsPage() {
    
     </tr>
     
+    
     <tr>
-      <td>Borrowed</td>
-      <td>{formatPriceAPI(account?.ALGO_borrow) || "-"}</td>
-      <td>{formatPriceAPI(account?.goBTC_borrow) || "-"}</td>
-      <td>{formatPriceAPI(account?.goETH_borrow) || "-"}</td>
-      <td>{formatPriceAPI(account?.USDC_borrow) || "-"}</td>
-      <td>{formatPriceAPI(account?.STBL_borrow) || "-"}</td>
-      <td>{formatPriceAPI(account?.total_borrow)}</td>
-    </tr>
-    <tr>
-      <td colspan="9999">
+      <td colSpan="9999">
         <div className="flex justify-end">
-         Util percent {(account?.util_perc.toFixed(2))}%
+         Util percent {(account?.util_perc.toFixed(2) * 100)}%
          </div>
       </td>
     </tr>
