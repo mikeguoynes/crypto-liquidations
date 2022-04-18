@@ -2,6 +2,12 @@ table#table-account-view tr td:first-child {
   background-color: lightblue;
 }
 
+table {
+  width: 60vw;
+  max-width: 1200px;
+  min-width: 50vw;
+}
+
 table#table-account-view tr td {
   font-size: 0.9rem;
 }

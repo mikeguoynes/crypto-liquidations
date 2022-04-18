@@ -1,17 +1,25 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Form, Link, NavLink, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LinksFunction } from "remix";
 import { useUser } from "~/utils";
-import { getAccounts } from "~/models/liquidations.server";
+import { getAccounts } from "~/models/accounts.server";
 
 import tables from "../styles/tables.css";
 import global from "../styles/global.css";
 import { Pagination } from "~/components/pagination";
+import { useEffect, useState } from "react";
 
+export type PaginationFilters = {
+  pageCount: number;
+  limit: number;
+  offset: number;
+}
 
 type LoaderData = {
   accountsListItems: Awaited<ReturnType<typeof getAccounts>>;
+  limit: number;
+  offset: number;
 };
 
 export const links: LinksFunction = () => {
@@ -19,19 +27,40 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const accountsListItems = await getAccounts({offset: 100, limit: 25});
-  return json<LoaderData>({ accountsListItems: accountsListItems });
+  const url = new URL(request.url)
+  const search = new URLSearchParams(url.search);
+  console.log('XXXXX', search)
+  const limit = +(search.get('limit') || 25);
+  const offset = +(search.get('offset') || 0);
+  const accountsListItems = await getAccounts({ limit, offset });
+  console.log('accountsListItems', accountsListItems);
+  return json<LoaderData>({ accountsListItems, limit, offset });
 };
 
-export default function AccountsPage() {
+export default function AccountListings() {
+  let navigate = useNavigate();
   const data = useLoaderData() as LoaderData;
   const user = useUser();
-
+  const [filters, setFilters] = useState({ limit: data.limit, offset: data.offset, pageCount: Math.ceil(data.accountsListItems.totalCount / 25 ) });
+  
   const handlePageChange = (pageChangeDirection: string) => {
+    let newOffset = 0;
+    console.log('pageChangeDirection', pageChangeDirection);
     if (pageChangeDirection === 'next') {
-      
+      newOffset = filters?.offset + filters?.limit;
+    } else {
+      newOffset = Math.max(filters?.offset - filters?.limit, 0) 
+    };
+    console.log('offset', newOffset)
+    navigate(`?limit=${filters.limit}&offset=${newOffset}`);
+
     }
-  }
+  
+
+    useEffect(() => {
+      setFilters({ limit: data.limit, offset: data.offset, pageCount: Math.ceil(data.accountsListItems.totalCount / 25 ) });
+    }, [data])
+
   const handleSort = () => {
     console.log("sort");
   };
@@ -74,8 +103,7 @@ export default function AccountsPage() {
 
         <div className="flex-1 p-6">
         <h2 className="text-xl text-blue-600 my-4 ml-4">Borrow Accounts </h2>
-          {/* TODO: Props offset={pagination?.offset} totalCount={999} */}
-          <Pagination onPageChange={handlePageChange}/>
+          <Pagination onPageChange={handlePageChange} filters={filters} totalCount={data.accountsListItems.totalCount}/>
           <table className="table-auto">
             <thead>
               <tr>
@@ -91,7 +119,7 @@ export default function AccountsPage() {
               </tr>
             </thead>
             <tbody>
-              {data.accountsListItems.map((account) => (
+              {data.accountsListItems.items.map((account) => (
                 <tr key={account.id}>
                   <td><Link to={`/accounts/${account.id}`}>{account.id}</Link></td>
                   <td>{account.ALGO_net}</td>

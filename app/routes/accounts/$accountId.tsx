@@ -2,7 +2,7 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, Outlet, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { accounts, getAccountByID } from "~/models/liquidations.server";
+import { accounts, getAccountByID } from "~/models/accounts.server";
 
 import { deleteNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
