@@ -73,6 +73,8 @@ export async function createUserSession({
   remember: boolean;
   redirectTo: string;
 }) {
+  console.log('request', request);
+  console.log('userid', userId);
   const session = await getSession(request);
   session.set(USER_SESSION_KEY, userId);
   return redirect(redirectTo, {

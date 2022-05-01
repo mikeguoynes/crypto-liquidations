@@ -29,23 +29,21 @@ export const links: LinksFunction = () => {
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url)
   const search = new URLSearchParams(url.search);
-  console.log('XXXXX', search)
   const limit = +(search.get('limit') || 25);
   const offset = +(search.get('offset') || 0);
   const accountsListItems = await getAccounts({ limit, offset });
-  console.log('accountsListItems', accountsListItems);
+  
   return json<LoaderData>({ accountsListItems, limit, offset });
 };
 
 export default function AccountListings() {
   let navigate = useNavigate();
   const data = useLoaderData() as LoaderData;
-  const user = useUser();
+
   const [filters, setFilters] = useState({ limit: data.limit, offset: data.offset, pageCount: Math.ceil(data.accountsListItems.totalCount / 25 ) });
   
   const handlePageChange = (pageChangeDirection: string) => {
     let newOffset = 0;
-    console.log('pageChangeDirection', pageChangeDirection);
     if (pageChangeDirection === 'next') {
       newOffset = filters?.offset + filters?.limit;
     } else {
@@ -53,13 +51,12 @@ export default function AccountListings() {
     };
     console.log('offset', newOffset)
     navigate(`?limit=${filters.limit}&offset=${newOffset}`);
+  }
 
-    }
-  
 
-    useEffect(() => {
-      setFilters({ limit: data.limit, offset: data.offset, pageCount: Math.ceil(data.accountsListItems.totalCount / 25 ) });
-    }, [data])
+  useEffect(() => {
+    setFilters({ limit: data.limit, offset: data.offset, pageCount: Math.ceil(data.accountsListItems.totalCount / 25 ) });
+  }, [data])
 
   const handleSort = () => {
     console.log("sort");
@@ -71,7 +68,6 @@ export default function AccountListings() {
         <h1 className="text-3xl font-bold">
           <Link to="/">Home</Link>
         </h1>
-        <p>{user.email}</p>
         <Form action="/logout" method="post">
           <button
             type="submit"
@@ -87,16 +83,22 @@ export default function AccountListings() {
           <Link to="new" className="block p-4 text-xl text-blue-500">
             + New Alert
           </Link>
+          <div></div>
 
-          <div>
-            <div>Min</div>
-            <input type="text"/>
-          </div>
+          
+          <div className="lhs-filters px-4 mt-8">
+            <h2 className="mb-4">Filters</h2>
+            <div className="mb-4">
+              <div>Min util %</div>
+              <input type="number" className="p-1"/>
+            </div>
 
-          <div>
-            <div>Max</div>
-            <input type="text"/>
+            <div className="mb-4">
+              <div>Max util %</div>
+              <input type="number" className="p-1"/>
+            </div>
           </div>
+          
 
           <hr />
         </div>
@@ -115,13 +117,13 @@ export default function AccountListings() {
                 <th onClick={handleSort}>Stbl</th>
                 <th onClick={handleSort}>max borrow</th>
                 <th onClick={handleSort}>total borrow</th>
-
+                <th>Util %</th>
               </tr>
             </thead>
             <tbody>
               {data.accountsListItems.items.map((account) => (
                 <tr key={account.id}>
-                  <td><Link to={`/accounts/${account.id}`}>{account.id}</Link></td>
+                  <td><Link to={`/accounts/${account.id}`}>{account.address}</Link></td>
                   <td>{account.ALGO_net}</td>
                   <td>{account.goBTC_net}</td>
                   <td>{account.goETH_net}</td>
@@ -129,6 +131,7 @@ export default function AccountListings() {
                   <td>{account.STBL_net}</td>
                   <td>{account.max_borrow}</td>
                   <td>{account.total_borrow}</td>
+                  <td>{(account.util_perc * 100).toFixed(2)}%</td>
                 </tr>
               ))}
             </tbody>
