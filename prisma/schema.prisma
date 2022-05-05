@@ -22,6 +22,12 @@ model Password {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Alert {
+  util_perc   String
+  userId Int @unique
+  user   private_accounts   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model Note {
   id        String   @id @default(cuid())
   title     String
@@ -81,4 +87,11 @@ model high_level {
 
   @@index([index], map: "ix_high_level_index")
   @@ignore
+}
+
+model private_accounts {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  address   String?
+  alert Alert?
 }

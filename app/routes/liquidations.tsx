@@ -1,8 +1,6 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
-import type { LinksFunction } from "remix";
-import { useUser } from "~/utils";
+import { Form, Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { getAccounts } from "~/models/accounts.server";
 
 import tables from "../styles/tables.css";
@@ -53,7 +51,6 @@ export default function AccountListings() {
     navigate(`?limit=${filters.limit}&offset=${newOffset}`);
   }
 
-
   useEffect(() => {
     setFilters({ limit: data.limit, offset: data.offset, pageCount: Math.ceil(data.accountsListItems.totalCount / 25 ) });
   }, [data])
@@ -84,7 +81,6 @@ export default function AccountListings() {
             + New Alert
           </Link>
           <div></div>
-
           
           <div className="lhs-filters px-4 mt-8">
             <h2 className="mb-4">Filters</h2>

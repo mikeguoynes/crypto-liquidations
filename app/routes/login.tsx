@@ -31,15 +31,12 @@ interface ActionData {
   };
 }
 
-
 export async function action({ request }: { request: any }): Promise<any> {
-  console.log("SUBMITTED")
- 
   const data = await request.formData();
-  console.log('boom', data.get('accountNumber'));
-
+  console.log('login.tsx 36 action - get account number', data.get('accountNumber'));
   return createUserSession({request, userId: data.get('accountNumber'), remember: false, redirectTo: '/liquidations'})
 }
+
 // export const action: ActionFunction = async ({ request }) => {
   
 //   const formData = await request.formData();
@@ -62,7 +59,6 @@ export const meta: MetaFunction = () => {
 export default function LoginPage() {
   const formRef = useRef<HTMLFormElement>(null); //Add a form ref.
   const [searchParams] = useSearchParams();
-  let accountNumber;
   const redirectTo = searchParams.get("redirectTo") || "/liquidations";
   const actionData = useActionData() as ActionData;
   const emailRef = React.useRef<HTMLInputElement>(null);
@@ -80,13 +76,13 @@ export default function LoginPage() {
   const handleConnectAlgoWallet = (event: any) => {
     // Submit arbitrary form data to the server. https://stackoverflow.com/questions/71123120/remix-usesubmit-arbitrary-data
    event.preventDefault();
+
    new MyAlgoConnect({ disableLedgerNano: false }).connect(settings).then((res) => {
      const accountInputEl: HTMLInputElement | null = document.querySelector('#accountNumber');
      if (!accountInputEl) { return; }
      accountInputEl.value = res[0].address;
-     console.log('Account num', accountInputEl.value);
      submit(
-      event.target, //Notice this change
+      event.target,
       { method: "post" }
     );
    })
